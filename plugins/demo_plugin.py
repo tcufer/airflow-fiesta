@@ -5,6 +5,10 @@ import logging as log
 from airflow.utils.decorators import apply_defaults
 from airflow.contrib.hooks.fs_hook import FSHook
 import os, stat
+#for custom hooks
+from airflow.hooks.base_hook import BaseHook
+from airflow.hooks.mysql_hook import MySqlHook
+from airflow.hooks.postgres_hook import PostgresHook
 
 class DataTransferOperator(BaseOperator):
 
@@ -63,7 +67,28 @@ class FileCountSensor(BaseSensorOperator):
             return False
         return False
 
+class MySQLToPostgresHook(BaseHook):
+    def __init__(self):
+        print("##custom hook started##")
+
+    def copy_table(self, mysql_conn_id, postgres_conn_id):
+
+        print("### fetching records from MySQL table ###")
+        mysqlserver = MySqlHook(mysql_conn_id)
+        sql_query = "SELECT * from city_table "
+        data = mysqlserver.get_records(sql_query)
+
+        print("### inserting records into Postgres table ###")
+        postgresserver = PostgresHook(postgres_conn_id)
+        postgres_query = "INSERT INTO city_table VALUES(%s, %s, %s);"
+        postgresserver.insert_rows(table='city_table', rows=data)
+
+        return True
+
+
+
 class DemoPlugin(AirflowPlugin):
     name = "demo_plugin"
     operators = [DataTransferOperator]
     sensors = [FileCountSensor]
+    hooks = [MySQLToPostgresHook]
