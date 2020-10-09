@@ -12,7 +12,7 @@ yesterday_date = datetime.strftime(datetime.now() - timedelta(1), '%Y-%m-%d')
 
 default_args = {
     'owner': 'Airflow',
-    'start_date': datetime(2020, 5, 26),
+    'start_date': datetime(2020, 10, 9),
     'retries': 1,
     'retry_delay': timedelta(seconds=5)
 }
@@ -42,11 +42,16 @@ with DAG('store_dag_2',default_args=default_args,schedule_interval='@daily', tem
 
     t7 = BashOperator(task_id='move_file2', bash_command='cat ~/store_files_airflow/store_wise_profit.csv && mv ~/store_files_airflow/store_wise_profit.csv ~/store_files_airflow/store_wise_profit_%s.csv' % yesterday_date)
 
-    t8 = EmailOperator(task_id='send_email',
-        to='example@example.com',
-        subject='Daily report generated',
-        html_content=""" <h1>Congratulations! Your store reports are ready.</h1> """,
-        files=['/usr/local/airflow/store_files_airflow/location_wise_profit_%s.csv' % yesterday_date, '/usr/local/airflow/store_files_airflow/store_wise_profit_%s.csv' % yesterday_date])
+    # t8 = EmailOperator(task_id='send_email',
+    #     to='example@example.com',
+    #     subject='Daily report generated',
+    #     html_content=""" <h1>Congratulations! Your store reports are ready.</h1> """,
+    #     files=['/usr/local/airflow/store_files_airflow/location_wise_profit_%s.csv' % yesterday_date, '/usr/local/airflow/store_files_airflow/store_wise_profit_%s.csv' % yesterday_date])
+
+    t8 = BashOperator(
+        task_id='Output_success',
+        bash_command='echo DONE!',
+    )
 
     t9 = BashOperator(task_id='rename_raw', bash_command='mv ~/store_files_airflow/raw_store_transactions.csv ~/store_files_airflow/raw_store_transactions_%s.csv' % yesterday_date)
 
