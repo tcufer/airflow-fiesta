@@ -5,13 +5,14 @@
 import tweepy
 import csv
 import pdb
+import yaml
 
 def get_all_tweets(screen_name):
-
-  consumer_key = ""
-  consumer_secret = ""
-  access_key = ""
-  access_secret = ""
+  # read credentials
+  consumer_key = config['consumer_key']
+  consumer_secret = config['consumer_secret']
+  access_key = config['access_key']
+  access_secret = config['access_secret']
 
   #authorize twitter, initialize tweepy
   auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
@@ -31,10 +32,9 @@ def get_all_tweets(screen_name):
   #save the id of the oldest tweet less one
   oldest = alltweets[-1].id - 1
 
-  #keep grabbing tweets until the api limit is reached
-  while len(alltweets) <= 1000:
+  #keep grabbing tweets until the api limit is reached or all tweets are read
+  while (len(alltweets) <= 3200 and len(new_tweets) > 0):
     print("getting tweets before {}".format(oldest))
-    # pdb.set_trace()
 
     #all subsiquent requests use the max_id param to prevent duplicates
     new_tweets = api.user_timeline(screen_name = screen_name,tweet_mode = 'extended', count=200,max_id=oldest)
@@ -64,5 +64,8 @@ def get_all_tweets(screen_name):
 
 
 if __name__ == '__main__':
+  config = ""
+  with open('dags/secrets.yml', 'r') as file:
+    config = yaml.safe_load(file)
   #pass in the username of the account you want to download
-  get_all_tweets("")
+  get_all_tweets(config['user_profile'])
