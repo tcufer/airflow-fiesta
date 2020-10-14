@@ -73,6 +73,8 @@ RUN set -ex \
         /usr/share/doc \
         /usr/share/doc-base
 
+RUN mkdir /usr/local/airflow/packages
+COPY airflow_files/packages.pth /usr/local/lib/python3.7/site-packages
 COPY script/entrypoint.sh /entrypoint.sh
 COPY config/airflow.cfg ${AIRFLOW_USER_HOME}/airflow.cfg
 
