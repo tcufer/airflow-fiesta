@@ -14,7 +14,7 @@ default_args = {
     "retry_delay": timedelta(minutes=5),
 }
 
-with DAG('store_dag', default_args=default_args, schedule_interval='@daily', catchup=False) as dag:
+with DAG('retrieve_tweets', default_args=default_args, schedule_interval='@daily', catchup=False) as dag:
 
   t1 = PythonOperator(task_id='twitter_feed', python_callable=get_all_tweets)
 

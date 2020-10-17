@@ -7,7 +7,13 @@ import csv
 import pdb
 import yaml
 
-def get_all_tweets(screen_name):
+def get_all_tweets():
+  config = ""
+  with open('./dags/secrets.yml', 'r') as file:
+    config = yaml.safe_load(file)
+  #pass in the username of the account you want to download
+  print("config file content: {}".format(config))
+  screen_name = config['user_profile']
   # read credentials
   consumer_key = config['consumer_key']
   consumer_secret = config['consumer_secret']
@@ -55,17 +61,18 @@ def get_all_tweets(screen_name):
       noRT.append([tweet.id_str, tweet.created_at, tweet.full_text])
 
   #write to csv
-  with open('{}_tweets.csv'.format(screen_name), 'w') as f:
+  with open('~/store_files_airflow/{}_tweets.csv'.format(screen_name), 'w') as f:
     writer = csv.writer(f)
     writer.writerow(["id","created_at","text"])
     writer.writerows(noRT)
     print('{}_tweets.csv was successfully created.'.format(screen_name))
   pass
 
-
-if __name__ == '__main__':
-  config = ""
-  with open('dags/secrets.yml', 'r') as file:
-    config = yaml.safe_load(file)
-  #pass in the username of the account you want to download
-  get_all_tweets(config['user_profile'])
+# TODO: Remove this
+# if __name__ == '__main__':
+#   config = ""
+#   with open('./dags/secrets.yml', 'r') as file:
+#     config = yaml.safe_load(file)
+#   #pass in the username of the account you want to download
+#   print("config file content: {}".format(config))
+#   get_all_tweets(config['user_profile'])
