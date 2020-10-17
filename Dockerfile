@@ -59,6 +59,7 @@ RUN set -ex \
     && pip install pyOpenSSL \
     && pip install ndg-httpsclient \
     && pip install pyasn1 \
+    && pip install SQLAlchemy==1.3.15 \
     && pip install apache-airflow[crypto,celery,postgres,hive,jdbc,mysql,ssh${AIRFLOW_DEPS:+,}${AIRFLOW_DEPS}]==${AIRFLOW_VERSION} \
     && pip install 'redis==3.2' \
     && if [ -n "${PYTHON_DEPS}" ]; then pip install ${PYTHON_DEPS}; fi \
@@ -76,10 +77,7 @@ RUN set -ex \
 COPY script/entrypoint.sh /entrypoint.sh
 COPY config/airflow.cfg ${AIRFLOW_USER_HOME}/airflow.cfg
 RUN mkdir /usr/local/airflow/packages
-COPY packages.pth /usr/local/lib/python3.7/site-packages
-COPY ./packages.pth ${AIRFLOW_USER_HOME}/packages/pack.pth
-COPY ./test.pth ${AIRFLOW_USER_HOME}/packages/test.pth
-
+COPY ./packages.pth /usr/local/lib/python3.7/site-packages
 
 RUN chown -R airflow: ${AIRFLOW_USER_HOME}
 
