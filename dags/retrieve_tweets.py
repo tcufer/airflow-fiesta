@@ -2,7 +2,7 @@ from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from datetime import datetime, timedelta
 
-from all_tweets import get_all_tweets
+from tweet_reader import TweetReader
 
 yesterday_date = datetime.strftime(datetime.now() - timedelta(1), '%Y-%m-%d')
 
@@ -16,6 +16,6 @@ default_args = {
 
 with DAG('retrieve_tweets', default_args=default_args, schedule_interval='@daily', catchup=False) as dag:
 
-  t1 = PythonOperator(task_id='twitter_feed', python_callable=get_all_tweets)
+  t1 = PythonOperator(task_id='twitter_feed', python_callable=TweetReader().get_all_tweets)
 
 t1
