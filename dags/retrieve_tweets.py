@@ -1,5 +1,6 @@
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
+from airflow.operators.bash_operator import BashOperator
 from datetime import datetime, timedelta
 
 from tweet_reader import TweetReader
@@ -18,4 +19,6 @@ with DAG('retrieve_tweets', default_args=default_args, schedule_interval='@daily
 
   t1 = PythonOperator(task_id='twitter_feed', python_callable=TweetReader().get_all_tweets)
 
-t1
+  t2 = BashOperator(task_id='move_csv_file', bash_command='mv ~/*.csv ~/store_files_airflow/')
+
+t1 >> t2
