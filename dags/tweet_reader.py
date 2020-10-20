@@ -6,10 +6,12 @@ import tweepy
 import csv
 import pdb
 import yaml
+from datetime import datetime
 
 class TweetReader():
 
   def get_all_tweets(self):
+    timestamp = datetime.strftime(datetime.now(), '%Y-%m-%d_%H%M%S')
     config = ""
     with open('./dags/secrets.yml', 'r') as file:
       config = yaml.safe_load(file)
@@ -62,13 +64,13 @@ class TweetReader():
         noRT.append([tweet.id_str, tweet.created_at, tweet.full_text])
 
     #write to csv
-    with open('{}_tweets.csv'.format(screen_name), 'w+') as f:
+    file_name = './store_files_airflow/{}_tweets_{}.csv'.format(screen_name, timestamp)
+    with open(file_name, 'w+') as f:
       writer = csv.writer(f)
       writer.writerow(["id","created_at","text"])
       writer.writerows(noRT)
-      print('{}_tweets.csv was successfully created.'.format(screen_name))
+      print('{} was successfully created.'.format(file_name))
     pass
 
-  # TODO: Remove this
 if __name__ == '__main__':
   TweetReader().get_all_tweets()
