@@ -9,6 +9,7 @@ import os, stat
 from airflow.hooks.base_hook import BaseHook
 from airflow.hooks.mysql_hook import MySqlHook
 from airflow.hooks.postgres_hook import PostgresHook
+import csv
 
 class DataTransferOperator(BaseOperator):
 
@@ -85,10 +86,29 @@ class MySQLToPostgresHook(BaseHook):
 
         return True
 
+class CsvToPostgresHook(BaseHook):
+    def __init__(self):
+        print("##custom hook started##")
+
+    def copy_rows(self, file_name, postgres_conn_id):
+
+        print("### fetching records from CSV file ###")
+        # file_CSV = open(file_name)
+        # data_CSV = csv.reader(file_CSV)
+
+        # data = data_CSV
+
+        print("### inserting records into Postgres table ###")
+        postgresserver = PostgresHook(postgres_conn_id)
+        postgresserver.bulk_load('twitter_data', file_name)
+        # postgresserver.insert_rows(table='twitter_data', rows=data)
+
+        return True
+
 
 
 class DemoPlugin(AirflowPlugin):
     name = "demo_plugin"
     operators = [DataTransferOperator]
     sensors = [FileCountSensor]
-    hooks = [MySQLToPostgresHook]
+    hooks = [MySQLToPostgresHook, CsvToPostgresHook]

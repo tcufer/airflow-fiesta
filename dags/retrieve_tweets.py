@@ -1,6 +1,7 @@
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from airflow.operators.bash_operator import BashOperator
+from airflow.hooks import CsvToPostgresHook
 from datetime import datetime, timedelta
 
 from tweet_reader import TweetReader
@@ -15,10 +16,14 @@ default_args = {
     "retry_delay": timedelta(minutes=5),
 }
 
-with DAG('retrieve_tweets', default_args=default_args, schedule_interval='@daily', catchup=False) as dag:
+dag = DAG('retrieve_tweets', default_args=default_args, schedule_interval='@daily', catchup=False)
 
-  t1 = PythonOperator(task_id='twitter_feed', python_callable=TweetReader().get_all_tweets)
+def trigger_hook():
+    CsvToPostgresHook().copy_rows('./store_files_airflow/*.csv', 'postgres_conn')
+    print("done")
+# t1 = PythonOperator(task_id='twitter_feed', python_callable=TweetReader().get_all_tweets)
 
-  t2 = BashOperator(task_id='move_csv_file', bash_command='mv ~/*.csv ~/store_files_airflow/')
+t1 = PythonOperator(task_id = 'csv_to_postgres', python_callable = trigger_hook, dag=dag)
 
-t1 >> t2
+
+t1
