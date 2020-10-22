@@ -22,7 +22,7 @@ def trigger_hook():
     CsvToPostgresHook().copy_rows('./store_files_airflow/*.csv', 'postgres_conn')
     print("done")
 # t1 = PythonOperator(task_id='twitter_feed', python_callable=TweetReader().get_all_tweets)
-
+# @TODO: Add xcom to pass twitter screen_name
 t1 = PythonOperator(task_id = 'csv_to_postgres', python_callable = trigger_hook, dag=dag)
 
 

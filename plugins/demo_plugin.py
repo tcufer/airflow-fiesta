@@ -93,16 +93,9 @@ class CsvToPostgresHook(BaseHook):
     def copy_rows(self, file_name, postgres_conn_id):
 
         print("### fetching records from CSV file ###")
-        # file_CSV = open(file_name)
-        # data_CSV = csv.reader(file_CSV)
-
-        # data = data_CSV
-
         print("### inserting records into Postgres table ###")
         postgresserver = PostgresHook(postgres_conn_id)
         postgresserver.bulk_load('twitter_data', file_name)
-        # postgresserver.insert_rows(table='twitter_data', rows=data)
-
         return True
 
 
