@@ -61,7 +61,7 @@ class TweetReader():
       if 'RT' in tweet.full_text:
         continue
       else:
-        noRT.append([tweet.id_str, tweet.created_at, tweet.full_text])
+        noRT.append([tweet.id_str, tweet.created_at, tweet.full_text.replace('\n\n','')])
 
     #write to csv
     file_name = './store_files_airflow/{}_tweets_{}.csv'.format(screen_name, timestamp)
