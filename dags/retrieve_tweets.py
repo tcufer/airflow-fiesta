@@ -18,12 +18,19 @@ default_args = {
 
 dag = DAG('retrieve_tweets', default_args=default_args, schedule_interval='@daily', catchup=False)
 
-def trigger_hook():
-    CsvToPostgresHook().copy_rows('./store_files_airflow/*.csv', 'postgres_conn')
+def trigger_hook_1(**kwargs):
+    tweets = TweetReader().get_all_tweets
+    ti = kwargs['ti']
+    ti.xcom_push(key="tweets", value=tweets)
+
+def trigger_hook_2(**kwargs):
+    ti = kwargs['ti']
+    file_to_read = ti.xcom_pull(key='message', task_ids='new_push_task')
+    CsvToPostgresHook().copy_rows('./store_files_airflow/{}.csv'.format(file_to_read), 'postgres_conn')
     print("done")
-# t1 = PythonOperator(task_id='twitter_feed', python_callable=TweetReader().get_all_tweets)
-# @TODO: Add xcom to pass twitter screen_name
-t1 = PythonOperator(task_id = 'csv_to_postgres', python_callable = trigger_hook, dag=dag)
+
+t1 = PythonOperator(task_id='twitter_feed', python_callable=trigger_hook_1, provide_context=True, dag=dag)
+t2 = PythonOperator(task_id = 'csv_to_postgres', python_callable = trigger_hook_2, provide_context=True, dag=dag)
 
 
-t1
+t1 >> t2

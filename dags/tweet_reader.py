@@ -70,6 +70,7 @@ class TweetReader():
       writer = csv.writer(f, delimiter='\t')
       writer.writerows(noRT)
       print('{} was successfully created.'.format(file_name))
+      return file_name
     pass
 
 if __name__ == '__main__':
