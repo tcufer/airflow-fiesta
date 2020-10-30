@@ -62,10 +62,18 @@ class TweetReader():
       if 'RT' in tweet.full_text:
         continue
       else:
-        noRT.append([tweet.id_str, tweet.created_at, re.sub('\\n+', '', tweet.full_text)])
+        noRT.append(
+          [
+            tweet.id_str,
+            tweet.created_at,
+            re.sub('\\n+', '', tweet.full_text),
+            tweet.retweet_count,
+            tweet.favorite_count
+          ]
+        )
 
     #write to csv
-    file_name = './store_files_airflow/{}_tweets_{}.csv'.format(screen_name, timestamp)
+    file_name = './store_files/{}_tweets_{}.csv'.format(screen_name, timestamp)
     with open(file_name, 'w+') as f:
       writer = csv.writer(f, delimiter='\t')
       writer.writerows(noRT)
