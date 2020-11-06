@@ -59,7 +59,7 @@ class TweetReader():
 
       #removes retweets
     for tweet in alltweets:
-      if 'RT' or '@' in tweet.full_text:
+      if 'RT' in tweet.full_text:
         continue
       else:
         noRT.append(
