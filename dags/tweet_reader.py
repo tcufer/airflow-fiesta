@@ -68,8 +68,7 @@ class TweetReader():
             tweet.created_at,
             re.sub('\\n+', '', tweet.full_text),
             tweet.retweet_count,
-            tweet.favorite_count,
-            tweet.replies
+            tweet.favorite_count
           ]
         )
 
