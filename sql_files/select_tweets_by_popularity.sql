@@ -1,3 +1,3 @@
-SELECT content, favorite_cnt, retweet_count
+SELECT screen_name, content, favorite_count, retweet_count
 FROM twitter_data
-ORDER BY favorite_cnt DESC, retweet_count DESC
+ORDER BY favorite_count DESC, retweet_count DESC
