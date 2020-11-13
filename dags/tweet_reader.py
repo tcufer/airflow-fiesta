@@ -43,6 +43,8 @@ class TweetReader():
       #save the id of the oldest tweet less one
       oldest = alltweets[-1].id - 1
 
+      print("getting tweets for screen name {}".format(screen_name))
+
       #keep grabbing tweets until the api limit is reached or all tweets are read
       while (len(alltweets) <= 3200 and len(new_tweets) > 0):
         print("getting tweets before {}".format(oldest))
