@@ -77,7 +77,7 @@ class TweetReader():
           )
 
     #write to csv
-    file_name = './store_files/tweets_{}.csv'.format(timestamp)
+    file_name = './store_files_airflow/tweets_{}.csv'.format(timestamp)
     with open(file_name, 'w+') as f:
       writer = csv.writer(f, delimiter='\t')
       writer.writerows(noRT)
