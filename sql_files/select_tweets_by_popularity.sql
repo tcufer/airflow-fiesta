@@ -4,6 +4,6 @@ ORDER BY favorite_count DESC, retweet_count DESC
 
 
 
-SELECT extract(year from created) as year, screen_name, content
+SELECT extract(year from created) as year, screen_name, length(content) as tweet_length
 FROM twitter_data
-GROUP BY 1
+GROUP BY 1,3
