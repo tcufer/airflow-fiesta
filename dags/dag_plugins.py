@@ -1,6 +1,6 @@
 from airflow import DAG
 from datetime import datetime, timedelta
-from airflow.operators import DataTransferOperator
+from airflow.operators.demo_plugin import DataTransferOperator
 
 dag = DAG("plugins_dag", schedule_interval=timedelta(1), start_date=datetime(2020, 10, 6), catchup=False)
 

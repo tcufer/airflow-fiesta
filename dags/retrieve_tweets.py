@@ -2,7 +2,7 @@ import airflow
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from airflow.operators.bash_operator import BashOperator
-from airflow.hooks import CsvToPostgresHook
+from airflow.hooks.demo_plugin import CsvToPostgresHook
 from datetime import datetime, timedelta
 from tweet_reader import TweetReader
 
