@@ -69,10 +69,10 @@ class TweetReader():
             [
               tweet.id_str,
               tweet.created_at,
-              tweet.user.screen_name,
               re.sub('\\n+', '', tweet.full_text),
               tweet.retweet_count,
-              tweet.favorite_count
+              tweet.favorite_count,
+              tweet.user.screen_name
             ]
           )
 
