@@ -27,3 +27,10 @@ class TestRetrieveTweets(unittest.TestCase):
         self.assertListEqual(upstream_task_ids, [])
         downstream_task_ids = list(map(lambda task: task.task_id, dummy_task.downstream_list))
         self.assertListEqual(downstream_task_ids, ['csv_to_postgres'])
+
+    def test_dependencies_of_csv_to_postgres_task(self):
+        """Check the task dependencies of twitter_feed task"""
+        dummy_task = self.dag.get_task('csv_to_postgres')
+
+        upstream_task_ids = list(map(lambda task: task.task_id, dummy_task.upstream_list))
+        self.assertListEqual(upstream_task_ids, ['twitter_feed'])
