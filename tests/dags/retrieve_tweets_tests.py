@@ -34,3 +34,5 @@ class TestRetrieveTweets(unittest.TestCase):
 
         upstream_task_ids = list(map(lambda task: task.task_id, dummy_task.upstream_list))
         self.assertListEqual(upstream_task_ids, ['twitter_feed'])
+        downstream_task_ids = list(map(lambda task: task.task_id, dummy_task.downstream_list))
+        self.assertListEqual(downstream_task_ids, [])
