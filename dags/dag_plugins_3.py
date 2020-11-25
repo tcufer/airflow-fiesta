@@ -1,6 +1,6 @@
 from airflow import DAG
 from datetime import datetime, timedelta
-# from airflow.operators.demo_plugin import DataTransferOperator
+from airflow.operators.demo_plugin import DataTransferOperator
 from airflow.sensors.demo_plugin import FileCountSensor
 from airflow.hooks.demo_plugin import MySQLToPostgresHook
 from airflow.operators.python_operator import PythonOperator

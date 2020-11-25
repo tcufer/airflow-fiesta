@@ -28,3 +28,12 @@ __pycache__
 # YAML config
 *.yml
 *.yaml
+
+# other
+store_files
+
+# Postgres
+pgdata
+
+# VS code
+.vscode
