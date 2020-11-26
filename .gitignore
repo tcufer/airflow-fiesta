@@ -31,6 +31,7 @@ __pycache__
 
 # other
 store_files
+airflow_files
 
 # Postgres
 pgdata
