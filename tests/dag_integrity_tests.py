@@ -18,7 +18,7 @@ class TestDagIntegrity(unittest.TestCase):
 
     def test_import_time(self):
         stats = self.dagbag.dagbag_stats
-        slow_dags = list(filter(lambda d: d.duration > self.LOAD_SECOND_THRESHOLD, stats))
+        slow_dags = list(filter(lambda d: d.duration > 2, stats))
         res = ', '.join(map(lambda d: d.file[1:], slow_dags))
 
         self.assertEqual(0, len(slow_dags),
