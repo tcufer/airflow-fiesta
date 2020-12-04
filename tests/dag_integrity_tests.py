@@ -25,3 +25,9 @@ class TestDagIntegrity(unittest.TestCase):
                           'The following files take more than {threshold}s to load: {res}'.format(
                               threshold=self.LOAD_SECOND_THRESHOLD, res=res)
                           )
+
+    def test_alert_email_present(self):
+        for dag_id, dag in self.dagbag.dags.items():
+            emails = dag.default_args.get('email', [])
+            msg = 'Alert email not set for DAG {id}'.format(id=dag_id)
+            self.assertIn('hello@world.com', emails, msg)
