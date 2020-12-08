@@ -14,3 +14,5 @@ class GoodreadsReader():
 
 if __name__ == '__main__':
     GoodreadsReader().get_quotes()
+
+# https://github.com/CW4RR10R/Quotes-API
