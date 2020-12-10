@@ -2,7 +2,7 @@
 
 # import csv
 # import pdb
-# import yaml
+import yaml
 # import re
 # from datetime import datetime
 from bs4 import BeautifulSoup 
@@ -13,11 +13,31 @@ import pprint
 #     def get_qutoes(self):
 #         #@TODO
 
+BASE_URL = "https://www.goodreads.com/quotes/search?utf8=%E2%9C%93&q="
+
+
+def compose_url(tags):
+    tags_to_string = ""
+    if len(tags) > 1:
+        tags_to_string = tags[0]
+        tags.pop(0)
+        for tag in tags:
+            tags_to_string = tags_to_string + "+" + tag
+    elif len(tags) == 1:
+        tags_to_string = tags[0]
+    
+    composed = "%s%s&commit=Search"%(BASE_URL, tags_to_string)
+    print(composed)
+    return composed
+
 
 if __name__ == '__main__':
     # GoodreadsReader().get_quotes()
+    config = ""
+    with open('./dags/secrets.yml', 'r') as file:
+      config = yaml.safe_load(file)
     results = []
-    url = "https://www.goodreads.com/quotes/search?utf8=%E2%9C%93&q=stoicism&commit=Search"   
+    url = compose_url(config['search_tags'])
     soup = BeautifulSoup(requests.get(url).text, "html.parser")
     for quote in soup.find_all("div", class_= "quote"):
         squote = {}
