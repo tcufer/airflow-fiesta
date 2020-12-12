@@ -6,6 +6,7 @@ from datetime import datetime
 from bs4 import BeautifulSoup 
 import requests
 import hashlib 
+import re
 
 class GoodreadsReader():
 
@@ -22,7 +23,6 @@ class GoodreadsReader():
             tags_to_string = tags[0]
         
         composed = "%s%s&commit=Search"%(self.BASE_URL, tags_to_string)
-        print(composed)
         return composed
 
     def generate_quote_id(self, data):
@@ -37,6 +37,8 @@ class GoodreadsReader():
         results = []
         url = self.compose_url(config['search_tags'])
         soup = BeautifulSoup(requests.get(url).text, "html.parser")
+        # pages = soup.find_all("a", {"href": re.compile("page")})
+        # for page in pages:
         for quote in soup.find_all("div", class_= "quote"):
             squote = {}
             squote['text']= quote.find("div", {"class": "quoteText"}).text.replace('\n','').strip()
