@@ -10,7 +10,8 @@ import re
 
 class GoodreadsReader():
 
-    BASE_URL = "https://www.goodreads.com/quotes/search?utf8=%E2%9C%93&q="
+    BASE_URL =  "https://www.goodreads.com"
+    START_URL = "https://www.goodreads.com/quotes/search?utf8=%E2%9C%93&q="
     
     def compose_url(self, tags):
         tags_to_string = ""
@@ -22,7 +23,7 @@ class GoodreadsReader():
         elif len(tags) == 1:
             tags_to_string = tags[0]
         
-        composed = "%s%s&commit=Search"%(self.BASE_URL, tags_to_string)
+        composed = "%s%s&commit=Search"%(self.START_URL, tags_to_string)
         return composed
 
     def generate_quote_id(self, data):
@@ -37,19 +38,25 @@ class GoodreadsReader():
         results = []
         url = self.compose_url(config['search_tags'])
         soup = BeautifulSoup(requests.get(url).text, "html.parser")
-        # pages = soup.find_all("a", {"href": re.compile("page")})
-        # for page in pages:
-        for quote in soup.find_all("div", class_= "quote"):
-            squote = {}
-            squote['text']= quote.find("div", {"class": "quoteText"}).text.replace('\n','').strip()
-            squote['author'] = quote.find("span", {"class": "authorOrTitle"}).text.replace('\n','').strip()  
-            leftAlignedImage = quote.find("a", {"class": "leftAlignedImage"})
-            squote['image'] = leftAlignedImage.img['src'] if leftAlignedImage else None
-            quoteFooter = quote.find("div", {"class": "quoteFooter"})
-            squote['tags'] = [tag.text.strip() for tag in quoteFooter.find_all("a") if tag and "likes" not in tag.text]
-            squote['likes'] = quoteFooter.find("div", {"class": "right"}).text.strip()
-            squote['id'] = self.generate_quote_id(squote['text'] + squote['author'])
-            results.append(squote)
+        pages = soup.find_all("a", {"href": re.compile("page")})
+        page_urls = set()
+        for page in pages:
+            page_urls.add(self.BASE_URL + page['href'])
+        
+        for page in page_urls:
+            soup = BeautifulSoup(requests.get(page).text, "html.parser")
+            print("Requesting page: ", page)
+            for quote in soup.find_all("div", class_= "quote"):
+                squote = {}
+                squote['text']= quote.find("div", {"class": "quoteText"}).text.replace('\n','').strip()
+                squote['author'] = quote.find("span", {"class": "authorOrTitle"}).text.replace('\n','').strip()  
+                leftAlignedImage = quote.find("a", {"class": "leftAlignedImage"})
+                squote['image'] = leftAlignedImage.img['src'] if leftAlignedImage else None
+                quoteFooter = quote.find("div", {"class": "quoteFooter"})
+                squote['tags'] = [tag.text.strip() for tag in quoteFooter.find_all("a") if tag and "likes" not in tag.text]
+                squote['likes'] = quoteFooter.find("div", {"class": "right"}).text.strip()
+                squote['id'] = self.generate_quote_id(squote['text'] + squote['author'])
+                results.append(squote)
         
         #write to csv
         file_name = './store_files/goodreads_quotes_{}.csv'.format(timestamp)
