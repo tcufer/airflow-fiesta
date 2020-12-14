@@ -67,6 +67,7 @@ class GoodreadsReader():
                 writer.writerow(row.values())
             print('{} was successfully created.'.format(file_name))
         pass
+        return file_name
 
 if __name__ == '__main__':
     GoodreadsReader().get_quotes()

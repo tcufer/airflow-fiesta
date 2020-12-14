@@ -90,12 +90,12 @@ class CsvToPostgresHook(BaseHook):
     def __init__(self):
         print("##custom hook started##")
 
-    def copy_rows(self, file_name, postgres_conn_id):
+    def copy_rows(self, file_name, table_name, postgres_conn_id):
 
         print("### fetching records from CSV file ###")
         print("### inserting records into Postgres table ###")
         postgresserver = PostgresHook(postgres_conn_id)
-        postgresserver.bulk_load('twitter_data', file_name)
+        postgresserver.bulk_load(table_name, file_name)
         return True
 
 

@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS goodreads_data(content text, author varchar(120), image_url text, tags text, likes int, id varchar(32));
