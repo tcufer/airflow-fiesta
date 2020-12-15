@@ -59,7 +59,7 @@ class GoodreadsReader():
                 results.append(squote)
         
         #write to csv
-        file_name = './store_files/goodreads_quotes_{}.csv'.format(timestamp)
+        file_name = './store_files_airflow/goodreads_quotes_{}.csv'.format(timestamp)
         with open(file_name, 'w+') as f:
             writer = csv.writer(f, delimiter='\t')
             writer.writerow(results[0].keys())
