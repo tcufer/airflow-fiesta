@@ -54,15 +54,14 @@ class GoodreadsReader():
                 squote['image'] = leftAlignedImage.img['src'] if leftAlignedImage else None
                 quoteFooter = quote.find("div", {"class": "quoteFooter"})
                 squote['tags'] = [tag.text.strip() for tag in quoteFooter.find_all("a") if tag and "likes" not in tag.text]
-                squote['likes'] = quoteFooter.find("div", {"class": "right"}).text.strip()
+                squote['likes'] = quoteFooter.find("div", {"class": "right"}).text.replace(" likes", "").strip()
                 squote['id'] = self.generate_quote_id(squote['text'] + squote['author'])
                 results.append(squote)
         
         #write to csv
-        file_name = './store_files_airflow/goodreads_quotes_{}.csv'.format(timestamp)
+        file_name = './store_files/goodreads_quotes_{}.csv'.format(timestamp)
         with open(file_name, 'w+') as f:
             writer = csv.writer(f, delimiter='\t')
-            writer.writerow(results[0].keys())
             for row in results:
                 writer.writerow(row.values())
             print('{} was successfully created.'.format(file_name))
