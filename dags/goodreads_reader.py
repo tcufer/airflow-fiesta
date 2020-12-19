@@ -42,16 +42,16 @@ class GoodreadsReader():
         page_urls = set()
         for page in pages:
             page_urls.add(self.BASE_URL + page['href'])
-        
+        page_urls.add(url)
         for page in page_urls:
             soup = BeautifulSoup(requests.get(page).text, "html.parser")
             print("Requesting page: ", page)
             for quote in soup.find_all("div", class_= "quote"):
                 squote = {}
                 squote['text']= quote.find("div", {"class": "quoteText"}).text.replace('\n','').strip()
-                squote['author'] = quote.find("span", {"class": "authorOrTitle"}).text.replace('\n','').strip()  
+                squote['author'] = quote.find("span", {"class": "authorOrTitle"}).text.replace('\n','').strip()
                 quoteFooter = quote.find("div", {"class": "quoteFooter"})
-                squote['tags'] = [tag.text.strip() for tag in quoteFooter.find_all("a") if tag and "likes" not in tag.text]
+                squote['tags'] = {tag.text.strip() for tag in quoteFooter.find_all("a") if tag and "likes" not in tag.text}
                 squote['likes'] = int(quoteFooter.find("div", {"class": "right"}).text.replace(" likes", "").strip())
                 squote['id'] = self.generate_quote_id(squote['text'] + squote['author'])
                 results.append(squote)
