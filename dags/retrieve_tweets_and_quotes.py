@@ -15,7 +15,7 @@ default_args = {
     "retry_delay": timedelta(minutes=5),
 }
 
-dag = DAG('retrieve_tweets', default_args=default_args, schedule_interval='@daily', catchup=False)
+dag = DAG('retrieve_tweets_and_quotes', default_args=default_args, schedule_interval='@daily', catchup=False)
 
 def trigger_hook_1(**kwargs):
     tweets = TweetReader().get_all_tweets()
