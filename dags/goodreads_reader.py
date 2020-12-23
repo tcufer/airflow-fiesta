@@ -51,7 +51,8 @@ class GoodreadsReader():
                 squote['text']= quote.find("div", {"class": "quoteText"}).text.replace('\n','').strip()
                 squote['author'] = quote.find("span", {"class": "authorOrTitle"}).text.replace('\n','').strip()
                 quoteFooter = quote.find("div", {"class": "quoteFooter"})
-                squote['tags'] = {tag.text.strip() for tag in quoteFooter.find_all("a") if tag and "likes" not in tag.text}
+                squote['tags'] = set('')
+                squote['tags'].add(tag.text.strip() for tag in quoteFooter.find_all("a") if tag and "likes" not in tag.text)
                 squote['likes'] = int(quoteFooter.find("div", {"class": "right"}).text.replace(" likes", "").strip())
                 squote['id'] = self.generate_quote_id(squote['text'] + squote['author'])
                 results.append(squote)
