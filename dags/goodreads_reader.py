@@ -49,8 +49,7 @@ class GoodreadsReader():
             for quote in soup.find_all("div", class_= "quote"):
                 squote = {}
                 quote_text = quote.find("div", {"class": "quoteText"}).text.replace('\n','').strip()
-                quote_text = re.sub(r"―.*", "", quote_text).strip()
-                squote['text']= quote_text
+                squote['text'] = re.sub("―.*", "", quote_text).strip() 
                 squote['author'] = quote.find("span", {"class": "authorOrTitle"}).text.replace('\n','').strip()
                 quoteFooter = quote.find("div", {"class": "quoteFooter"})
                 squote['tags'] = set(tag.text.strip() for tag in quoteFooter.find_all("a") if tag and "likes" not in tag.text)
