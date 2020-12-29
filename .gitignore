@@ -30,7 +30,7 @@ __pycache__
 *.yaml
 
 # other
-store_files
+store_files/*
 airflow_files
 
 # Postgres
