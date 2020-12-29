@@ -43,4 +43,4 @@ t3 = PythonOperator(task_id='goodreads_quotes', python_callable=trigger_hook_3, 
 t4 = PythonOperator(task_id='csv_to_postgres_2', python_callable=trigger_hook_4, provide_context=True, dag=dag)
 
 
-t1 >> t2, t3 >> t4
+t1 >> t2 >> t3 >> t4
