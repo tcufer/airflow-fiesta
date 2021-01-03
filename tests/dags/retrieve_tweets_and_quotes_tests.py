@@ -5,7 +5,7 @@ class TestRetrieveTweets(unittest.TestCase):
 
     def setUp(self):
         self.dagbag = DagBag()
-        self.dag_id = 'retrieve_tweets'
+        self.dag_id = 'retrieve_tweets_and_quotes'
         self.dag = self.dagbag.dags[self.dag_id]
         self.tasks = ['twitter_feed', 'csv_to_postgres']
 
