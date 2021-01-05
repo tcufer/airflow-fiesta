@@ -27,7 +27,7 @@ class TestRetrieveTweets(unittest.TestCase):
         downstream_task_ids = list(map(lambda task: task.task_id, dummy_task.downstream_list))
         self.assertListEqual(downstream_task_ids, ['csv_to_postgres_1'])
 
-    def test_dependencies_of_csv_to_postgres_2_task(self):
+    def test_dependencies_of_csv_to_postgres_1_task(self):
         """Check the task dependencies of csv_to_postgres_1 task"""
         dummy_task = self.dag.get_task('csv_to_postgres_1')
         upstream_task_ids = list(map(lambda task: task.task_id, dummy_task.upstream_list))
@@ -43,7 +43,7 @@ class TestRetrieveTweets(unittest.TestCase):
         downstream_task_ids = list(map(lambda task: task.task_id, dummy_task.downstream_list))
         self.assertListEqual(downstream_task_ids, ['csv_to_postgres_2'])
 
-    def test_dependencies_of_csv_to_postgres_1_task(self):
+    def test_dependencies_of_csv_to_postgres_2_task(self):
         """Check the task dependencies of csv_to_postgres_2 task"""
         dummy_task = self.dag.get_task('csv_to_postgres_2')
         upstream_task_ids = list(map(lambda task: task.task_id, dummy_task.upstream_list))
