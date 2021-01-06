@@ -13,7 +13,7 @@ class GoodreadsReader():
     BASE_URL =  "https://www.goodreads.com"
     START_URL = "https://www.goodreads.com/quotes/search?utf8=%E2%9C%93&q="
     
-    def compose_url(self, tags):
+    def __compose_url(self, tags):
         tags_to_string = ""
         if len(tags) > 1:
             tags_to_string = tags[0]
@@ -26,7 +26,7 @@ class GoodreadsReader():
         composed = "%s%s&commit=Search"%(self.START_URL, tags_to_string)
         return composed
 
-    def generate_quote_id(self, data):
+    def __generate_quote_id(self, data):
         prepared_value = hashlib.md5(data.encode())
         return prepared_value.hexdigest()
 
@@ -36,7 +36,7 @@ class GoodreadsReader():
         with open('./dags/secrets.yml', 'r') as file:
             config = yaml.safe_load(file)
         results = []
-        url = self.compose_url(config['search_tags'])
+        url = self.__compose_url(config['search_tags'])
         soup = BeautifulSoup(requests.get(url).text, "html.parser")
         pages = soup.find_all("a", {"href": re.compile("page")})
         page_urls = set()
@@ -56,7 +56,7 @@ class GoodreadsReader():
                 if len(squote['tags']) == 0:
                     squote['tags'] = set([""])
                 squote['likes'] = int(quoteFooter.find("div", {"class": "right"}).text.replace(" likes", "").strip())
-                squote['id'] = self.generate_quote_id(squote['text'] + squote['author'])
+                squote['id'] = self.__generate_quote_id(squote['text'] + squote['author'])
                 results.append(squote)
         
         #write to csv
